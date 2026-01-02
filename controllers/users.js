@@ -1,4 +1,4 @@
-const User = require('./user');
+const User = require('../models/user');
 
 const getUsers = (req, res) => {
   User.find()
@@ -8,4 +8,10 @@ const getUsers = (req, res) => {
   .catch(err => res.status(500).send({ message: 'Error' }));
 };
 
-module.exports = { getUsers };
+const getUser = (req, res) => {
+  User.findById(req.params.id)
+  .then()
+  .catch();
+};
+
+module.exports = { getUsers, getUser };
