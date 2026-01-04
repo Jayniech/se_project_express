@@ -6,7 +6,7 @@ const getClothingItems = (req, res) => {
     res.send(data);
   })
   .catch(() => res.status(500).send({ message: 'Requested resource not found' }));
-}
+};
 
 const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
@@ -14,7 +14,7 @@ const createClothingItem = (req, res) => {
   ClothingItem.create({ name, weather, imageUrl, owner })
   .then(item => res.status(201).send({ data: item }))
   .catch(() => res.status(400).send({ message: 'Clothing item not created' }));
-}
+};
 
 const deleteClothingItem = (req, res) => {
   ClothingItem.findByIdAndDelete(req.params.id)
@@ -22,9 +22,9 @@ const deleteClothingItem = (req, res) => {
     if (!item) {
       return res.status(404).send({ message: 'Clothing item not found' });
     }
-     return res.send({ data: item });
+    return res.send({ data: item });
     })
   .catch(() => res.status(500).send({ message: 'Requested resource not found' }));
-}
+};
 
 module.exports = { getClothingItems, createClothingItem, deleteClothingItem };
