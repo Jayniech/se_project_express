@@ -14,7 +14,7 @@ const getUser = (req, res) => {
     if (!user) {
       return res.status(404).send({ message: 'User not found' });
     }
-    res.send({ data: user });
+    return res.send({ data: user });
   })
   .catch(() => res.status(500).send({ message: 'Requested resource not found' }));
 };
