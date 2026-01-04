@@ -21,5 +21,5 @@ app.use('/users', usersRouter);
 app.use('/clothingItems', clothingItemsRouter);
 
 app.listen(PORT, () => {
-  console.log(`App listening at port ${PORT}`);
+  // console.log(`App listening at port ${PORT}`);
 });
