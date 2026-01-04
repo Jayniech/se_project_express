@@ -36,7 +36,7 @@ const clothingItemSchema = new mongoose.Schema({
   createdAt: {
     type: mongoose.Schema.Types.Date,
     default: Date.now
-  }
+  },
 });
 
 module.exports = mongoose.model('clothingItem', clothingItemSchema);
