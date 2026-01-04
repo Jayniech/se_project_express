@@ -11,6 +11,12 @@ const clothingItemsRouter = require('./routes/clothingItems');
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
 
 app.use(express.json());
+app.use((req, res, next) => {
+  req.user = {
+    _id: '695ac35c8846d3b0865ba276'
+  };
+  next();
+});
 app.use('/users', usersRouter);
 app.use('/clothingItems', clothingItemsRouter);
 
