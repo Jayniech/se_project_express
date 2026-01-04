@@ -11,7 +11,7 @@ const getClothingItems = (req, res) => {
 const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
-  ClothingItem.create({ name, weather, imageUrl, owner})
+  ClothingItem.create({ name, weather, imageUrl, owner })
   .then(item => res.status(201).send({ data: item }))
   .catch(() => res.status(400).send({ message: 'Clothing item not created' }));
 }
