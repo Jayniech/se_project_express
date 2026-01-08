@@ -1,30 +1,35 @@
 const User = require('../models/user');
+const { badRequest, serverError, notFound } = require('../utils/errors');
 
 const getUsers = (req, res) => {
   User.find()
   .then(data => {
     res.send(data);
   })
-  .catch(() => res.status(500).send({ message: 'Requested resource not found' }));
+  .catch(() => res.status(serverError).send({ message: 'An error has occurred on the server.' }));
 };
 
 const getUser = (req, res) => {
   User.findById(req.params.id)
   .then(user => {
     if (!user) {
-      return res.status(404).send({ message: 'User not found' });
+      return res.status(notFound).send({ message: 'User not found.' });
     }
     return res.send({ data: user });
   })
-  .catch(() => res.status(500).send({ message: 'Requested resource not found' }));
+  .catch(() => res.status(serverError).send({ message: 'An error has occurred on the server.' }));
 };
 
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
 
-  User.create({ name, avatar })
+  if (!name || !avatar) {
+    return res.status(badRequest).send({ message: 'Name and avatar are required.' });
+  }
+
+  return User.create({ name, avatar })
   .then(user => res.send({ data: user }))
-  .catch(() => res.status(400).send({ message: 'User not created' }));
+  .catch(() => res.status(serverError).send({ message: 'An error has occurred on the server.' }));
 };
 
 module.exports = { getUsers, getUser, createUser };
