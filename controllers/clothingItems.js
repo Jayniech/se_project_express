@@ -25,13 +25,17 @@ const createClothingItem = (req, res) => {
 
 const deleteClothingItem = (req, res) => {
   ClothingItem.findByIdAndDelete(req.params.id)
+  .orFail()
   .then(item => {
-    if (!item) {
-      return res.status(notFound).send({ message: 'Clothing item not found.' });
-    }
-    return res.send({ data: item });
+    res.send({ data: item });
     })
-  .catch(() => res.status(serverError).send({ message: 'An error has occurred on the server.' }));
+  .catch((err) => {
+  if (err.name === 'DocumentNotFoundError') {
+   res.status(notFound).send({ message: 'Clothing item not found' });
+   } else {
+   res.status(serverError).send({ message: 'An error has occurred on the server.' });
+   }
+  });
 };
 
 module.exports = { getClothingItems, createClothingItem, deleteClothingItem };

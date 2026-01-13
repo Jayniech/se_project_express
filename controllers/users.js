@@ -11,13 +11,17 @@ const getUsers = (req, res) => {
 
 const getUser = (req, res) => {
   User.findById(req.params.id)
+  .orFail()
   .then(user => {
-    if (!user) {
-      return res.status(notFound).send({ message: 'User not found.' });
-    }
-    return res.send({ data: user });
+    res.send({ data: user });
   })
-  .catch(() => res.status(serverError).send({ message: 'An error has occurred on the server.' }));
+  .catch((err) => {
+  if (err.name === 'DocumentNotFoundError') {
+    res.status(notFound).send({ message: 'User not found' });
+  } else {
+    res.status(serverError).send({ message: 'An error has occurred on the server.' });
+  }
+});
 };
 
 const createUser = (req, res) => {
