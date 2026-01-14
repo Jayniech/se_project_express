@@ -13,14 +13,15 @@ const getClothingItems = (req, res) => {
 const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
-
-  if (!name || !weather || !imageUrl || !owner) {
-    return res.status(badRequest).send({ message: 'Name, weather, image and ID are required.' });
-  }
-
-  return ClothingItem.create({ name, weather, imageUrl, owner })
+  ClothingItem.create({ name, weather, imageUrl, owner })
   .then(item => res.status(201).send({ data: item }))
-  .catch(() => res.status(serverError).send({ message: 'An error has occurred on the server.' }));
+  .catch((err) => {
+  if (err.name === 'ValidationError') {
+    res.status(badRequest).send({ message: 'Validation failed' });
+    } else {
+    res.status(serverError).send({ message: 'An error has occurred on the server.' });
+    }
+  });
 };
 
 const deleteClothingItem = (req, res) => {
@@ -32,7 +33,9 @@ const deleteClothingItem = (req, res) => {
   .catch((err) => {
   if (err.name === 'DocumentNotFoundError') {
    res.status(notFound).send({ message: 'Clothing item not found' });
-   } else {
+   } else if (err.name === 'CastError') {
+    res.status(badRequest).send({ message: 'Validation failed' });
+    } else {
    res.status(serverError).send({ message: 'An error has occurred on the server.' });
    }
   });
@@ -49,11 +52,13 @@ const likeItem = (req, res) => {
     res.send({ data: like })
   })
   .catch((err) => {
-  if (err.name === 'DocumentNotFoundError') {
+  if (err.name === 'CastError') {
+    res.status(badRequest).send({ message: 'Validation failed' });
+    } else if (err.name === 'DocumentNotFoundError') {
    res.status(notFound).send({ message: 'Clothing item not found' });
-   } else {
-   res.status(serverError).send({ message: 'An error has occurred on the server.' });
-   }
+   }else {
+    res.status(serverError).send({ message: 'An error has occurred on the server.' });
+    }
   });
 };
 
@@ -70,7 +75,9 @@ const dislikeItem = (req, res) => {
   .catch((err) => {
   if (err.name === 'DocumentNotFoundError') {
    res.status(notFound).send({ message: 'Clothing item not found' });
-   } else {
+   } else if (err.name === 'CastError') {
+    res.status(badRequest).send({ message: 'Validation failed' });
+    } else {
    res.status(serverError).send({ message: 'An error has occurred on the server.' });
    }
   });

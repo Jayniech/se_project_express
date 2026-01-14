@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/users', usersRouter);
-app.use('/clothingItems', clothingItemsRouter);
+app.use('/items', clothingItemsRouter);
 
 app.listen(PORT, () => {
   // console.log(`App listening at port ${PORT}`);

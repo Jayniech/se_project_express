@@ -16,24 +16,27 @@ const getUser = (req, res) => {
     res.send({ data: user });
   })
   .catch((err) => {
-  if (err.name === 'DocumentNotFoundError') {
-    res.status(notFound).send({ message: 'User not found' });
-  } else {
+  if (err.name === 'CastError') {
+    res.status(badRequest).send({ message: 'Validation failed' });
+    } else if (err.name === 'DocumentNotFoundError') {
+   res.status(notFound).send({ message: 'Clothing item not found' });
+   } else {
     res.status(serverError).send({ message: 'An error has occurred on the server.' });
-  }
-});
+    }
+  });
 };
 
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
-
-  if (!name || !avatar) {
-    return res.status(badRequest).send({ message: 'Name and avatar are required.' });
-  }
-
-  return User.create({ name, avatar })
+  User.create({ name, avatar })
   .then(user => res.send({ data: user }))
-  .catch(() => res.status(serverError).send({ message: 'An error has occurred on the server.' }));
+  .catch((err) => {
+  if (err.name === 'ValidationError') {
+    res.status(badRequest).send({ message: 'Validation failed' });
+    } else {
+    res.status(serverError).send({ message: 'An error has occurred on the server.' });
+    }
+  });
 };
 
 module.exports = { getUsers, getUser, createUser };
