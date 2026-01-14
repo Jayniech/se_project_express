@@ -49,14 +49,14 @@ const likeItem = (req, res) => {
   )
   .orFail()
   .then(like => {
-    res.send({ data: like })
+    res.send({ data: like });
   })
   .catch((err) => {
   if (err.name === 'CastError') {
     res.status(badRequest).send({ message: 'Validation failed' });
     } else if (err.name === 'DocumentNotFoundError') {
    res.status(notFound).send({ message: 'Clothing item not found' });
-   }else {
+   } else {
     res.status(serverError).send({ message: 'An error has occurred on the server.' });
     }
   });
@@ -70,7 +70,7 @@ const dislikeItem = (req, res) => {
   )
   .orFail()
   .then(like => {
-    res.send({ data: like })
+    res.send({ data: like });
   })
   .catch((err) => {
   if (err.name === 'DocumentNotFoundError') {
