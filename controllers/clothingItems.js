@@ -38,4 +38,42 @@ const deleteClothingItem = (req, res) => {
   });
 };
 
-module.exports = { getClothingItems, createClothingItem, deleteClothingItem };
+const likeItem = (req, res) => {
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+  .orFail()
+  .then(like => {
+    res.send({ data: like })
+  })
+  .catch((err) => {
+  if (err.name === 'DocumentNotFoundError') {
+   res.status(notFound).send({ message: 'Clothing item not found' });
+   } else {
+   res.status(serverError).send({ message: 'An error has occurred on the server.' });
+   }
+  });
+};
+
+const dislikeItem = (req, res) => {
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+  { $pull: { likes: req.user._id } },
+  { new: true },
+  )
+  .orFail()
+  .then(like => {
+    res.send({ data: like })
+  })
+  .catch((err) => {
+  if (err.name === 'DocumentNotFoundError') {
+   res.status(notFound).send({ message: 'Clothing item not found' });
+   } else {
+   res.status(serverError).send({ message: 'An error has occurred on the server.' });
+   }
+  });
+};
+
+module.exports = { getClothingItems, createClothingItem, deleteClothingItem, likeItem, dislikeItem };
