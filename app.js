@@ -23,7 +23,7 @@ app.use("/users", usersRouter);
 app.use("/items", clothingItemsRouter);
 
 app.use((req, res) => {
-  res.status(notFound).send({message: "Requested resource not found"});
+  res.status(notFound).send({ message: "Requested resource not found" });
 });
 
 app.listen(PORT, () => {
