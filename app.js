@@ -8,7 +8,7 @@ const usersRouter = require("./routes/users");
 
 const clothingItemsRouter = require("./routes/clothingItems");
 
-const notFound = require("./utils/errors");
+const { notFound } = require("./utils/errors");
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
