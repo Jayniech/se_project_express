@@ -10,17 +10,17 @@ const clothingItemsRouter = require("./routes/clothingItems");
 
 const { notFound } = require("./utils/errors");
 
+const { createUser, login} = require("./controllers/users");
+
+const auth = require("./middlewares/auth");
+
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
 app.use(express.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: "695ac35c8846d3b0865ba276",
-  };
-  next();
-});
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use("/users", usersRouter);
-app.use("/items", clothingItemsRouter);
+app.use("/items", auth, clothingItemsRouter);
 
 app.use((req, res) => {
   res.status(notFound).send({ message: "Requested resource not found" });
