@@ -65,6 +65,7 @@ const createUser = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
+    .orFail()
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
@@ -76,4 +77,24 @@ const login = (req, res) => {
     });
 };
 
-module.exports = { getCurrentUser, login };
+const updateProfile = (req, res) => {
+  const { name, avatar } = req.body;
+  User.findByIdAndUpdate(req.user, { name, avatar }, { new: true, runValidators: true })
+  .orFail()
+  .then((user) => {
+      res.send({ data: user });
+  })
+  .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(badRequest).send({ message: "Validation failed" });
+      } else if (err.name === "DocumentNotFoundError") {
+        res.status(notFound).send({ message: "User not found" });
+      } else {
+        res
+          .status(serverError)
+          .send({ message: "An error has occurred on the server." });
+      }
+  });
+};
+
+module.exports = { getCurrentUser, createUser, login, updateProfile };
