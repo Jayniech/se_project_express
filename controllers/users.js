@@ -68,8 +68,10 @@ const createUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  User.findUserByCredentials(email, password)
-    .orFail()
+  if (!email || !password) {
+    res.status(badRequest).send({ message: "Please enter email and password" });
+  } else {
+    User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
@@ -79,6 +81,7 @@ const login = (req, res) => {
     .catch((err) => {
       res.status(unauthorized).send({ message: err.message });
     });
+  }
 };
 
 const updateProfile = (req, res) => {

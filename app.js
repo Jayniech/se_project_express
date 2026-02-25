@@ -12,6 +12,14 @@ const auth = require("./middlewares/auth");
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
+// mongoose.connection.on('connected', () => {
+//   console.log('Connected to MongoDB');
+// });
+
+// mongoose.connection.on('error', (err) => {
+//   console.log('MongoDB connection error:', err);
+// });
+
 app.use(express.json());
 app.use(cors());
 app.post('/signin', login);
