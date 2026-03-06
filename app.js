@@ -22,8 +22,8 @@ mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
 app.use(express.json());
 app.use(cors());
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post("/signup", createUser);
+app.post("/signin", login);
 app.use("/users", auth, usersRouter);
 app.use("/items", auth, clothingItemsRouter);
 
