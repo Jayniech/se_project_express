@@ -25,7 +25,7 @@ app.use(cors());
 app.post("/signup", createUser);
 app.post("/signin", login);
 app.use("/users", auth, usersRouter);
-app.use("/items", auth, clothingItemsRouter);
+app.use("/items", clothingItemsRouter);
 
 app.use((req, res) => {
   res.status(notFound).send({ message: "Requested resource not found" });
