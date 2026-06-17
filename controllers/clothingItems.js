@@ -33,30 +33,32 @@ const createClothingItem = (req, res) => {
 const deleteClothingItem = (req, res) => {
   const owner = req.user._id;
   ClothingItem.findById(req.params.id)
-  .orFail()
-  .then((item) => {
-    if (owner !== item.owner.toString()) {
-      res.status(forbidden).send({ message: "Clothing item cannot be deleted."});
-    } else {
-      ClothingItem.findByIdAndDelete(req.params.id)
-      .orFail()
-      .then((deleted) => {
-        res.send({ data: deleted });
-      })
-      .catch((err) => {
-        if (err.name === "DocumentNotFoundError") {
-          res.status(notFound).send({ message: "Clothing item not found" });
-        } else if (err.name === "CastError") {
-          res.status(badRequest).send({ message: "Validation failed" });
-        } else {
-          res
-            .status(serverError)
-            .send({ message: "An error has occurred on the server." });
-        }
-      });
-    }
-  })
-  .catch((err) => {
+    .orFail()
+    .then((item) => {
+      if (owner !== item.owner.toString()) {
+        res
+          .status(forbidden)
+          .send({ message: "Clothing item cannot be deleted." });
+      } else {
+        ClothingItem.findByIdAndDelete(req.params.id)
+          .orFail()
+          .then((deleted) => {
+            res.send({ data: deleted });
+          })
+          .catch((err) => {
+            if (err.name === "DocumentNotFoundError") {
+              res.status(notFound).send({ message: "Clothing item not found" });
+            } else if (err.name === "CastError") {
+              res.status(badRequest).send({ message: "Validation failed" });
+            } else {
+              res
+                .status(serverError)
+                .send({ message: "An error has occurred on the server." });
+            }
+          });
+      }
+    })
+    .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         res.status(notFound).send({ message: "Clothing item not found" });
       } else if (err.name === "CastError") {

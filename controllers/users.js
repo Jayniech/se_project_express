@@ -72,30 +72,38 @@ const login = (req, res) => {
     res.status(badRequest).send({ message: "Please enter email and password" });
   } else {
     User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: "7d",
+      .then((user) => {
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+          expiresIn: "7d",
+        });
+        res.send({ token });
+      })
+      .catch((err) => {
+        if (err.message === "Incorrect email or password") {
+          res
+            .status(unauthorized)
+            .send({ message: "Incorrect email or password" });
+        } else {
+          res
+            .status(serverError)
+            .send({ message: "An error has occurred on the server." });
+        }
       });
-      res.send({ token });
-    })
-    .catch((err) => {
-      if (err.message === 'Incorrect email or password') {
-        res.status(unauthorized).send({ message: 'Incorrect email or password' });
-      } else {
-        res.status(serverError).send({ message: 'An error has occurred on the server.' });
-      }
-    });
   }
 };
 
 const updateProfile = (req, res) => {
   const { name, avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, avatar }, { new: true, runValidators: true })
-  .orFail()
-  .then((user) => {
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
+    .orFail()
+    .then((user) => {
       res.send({ data: user });
-  })
-  .catch((err) => {
+    })
+    .catch((err) => {
       if (err.name === "ValidationError") {
         res.status(badRequest).send({ message: "Validation failed" });
       } else if (err.name === "CastError") {
@@ -107,7 +115,7 @@ const updateProfile = (req, res) => {
           .status(serverError)
           .send({ message: "An error has occurred on the server." });
       }
-  });
+    });
 };
 
 module.exports = { getCurrentUser, createUser, login, updateProfile };
