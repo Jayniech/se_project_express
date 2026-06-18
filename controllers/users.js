@@ -10,18 +10,6 @@ const {
 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
-// const getUsers = (req, res) => {
-//   User.find()
-//     .then((data) => {
-//       res.send(data);
-//     })
-//     .catch(() =>
-//       res
-//         .status(serverError)
-//         .send({ message: "An error has occurred on the server." })
-//     );
-// };
-
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .orFail()
