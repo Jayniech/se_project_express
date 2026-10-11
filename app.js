@@ -9,6 +9,7 @@ const clothingItemsRouter = require("./routes/clothingItems");
 const { notFound } = require("./utils/errors");
 const { createUser, login } = require("./controllers/users");
 const auth = require("./middlewares/auth");
+const errorHandler = require('./middlewares/error-handler');
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
@@ -30,6 +31,7 @@ app.use("/items", clothingItemsRouter);
 app.use((req, res) => {
   res.status(notFound).send({ message: "Requested resource not found" });
 });
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   // console.log(`App listening at port ${PORT}`);
