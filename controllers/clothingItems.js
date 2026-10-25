@@ -26,7 +26,7 @@ const deleteClothingItem = (req, res, next) => {
   ClothingItem.findById(req.params.id)
     .orFail()
     .then((item) => {
-      if (owner !== item.owner.toString()) {
+      if (owner.toString() !== item.owner.toString()) {
         return next(new ForbiddenError("Clothing item cannot be deleted"));
       } else {
         ClothingItem.findByIdAndDelete(req.params.id)

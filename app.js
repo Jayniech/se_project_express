@@ -8,8 +8,10 @@ const usersRouter = require("./routes/users");
 const clothingItemsRouter = require("./routes/clothingItems");
 const { notFound } = require("./utils/errors");
 const { createUser, login } = require("./controllers/users");
-const auth = require("./middlewares/auth");
-const errorHandler = require('./middlewares/error-handler');
+const { validateUserLogIn, validateUserInfoBody } = require("./middleware/validation")
+const auth = require("./middleware/auth");
+const { errors } = require('celebrate');
+const errorHandler = require('./middleware/error-handler');
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
@@ -23,10 +25,12 @@ mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
 app.use(express.json());
 app.use(cors());
-app.post("/signup", createUser);
-app.post("/signin", login);
+app.post("/signup", validateUserInfoBody, createUser);
+app.post("/signin", validateUserLogIn, login);
 app.use("/users", auth, usersRouter);
 app.use("/items", clothingItemsRouter);
+
+app.use(errors());
 
 app.use((req, res) => {
   res.status(notFound).send({ message: "Requested resource not found" });
