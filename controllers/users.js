@@ -1,3 +1,4 @@
+const { JWT_SECRET } = require("../utils/config");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
@@ -11,7 +12,6 @@ const {
   conflictError,
   unauthorized,
 } = require("../utils/errors");
-const { JWT_SECRET } = require("../utils/config");
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
